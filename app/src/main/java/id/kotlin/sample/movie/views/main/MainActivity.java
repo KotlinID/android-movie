@@ -4,7 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -19,12 +26,14 @@ import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     @Inject
     protected DiscoverMovieService discoverMovieService;
 
     private CompositeDisposable disposables;
+    private ProgressBar progressBar;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -32,6 +41,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ((ActivityProvider) getApplication()).provideActivityComponent().inject(this);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.tb_main);
+        toolbar.setTitle(getTitle());
+        setSupportActionBar(toolbar);
+
+        progressBar = (ProgressBar) findViewById(R.id.pb_main);
+        recyclerView = (RecyclerView) findViewById(R.id.rv_main);
+
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
         disposables = new CompositeDisposable();
         discoverMovie();
@@ -44,13 +63,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void discoverMovie() {
+        progressBar.setVisibility(View.VISIBLE);
 
         final Disposable disposable = discoverMovieService.discoverMovie(Constants.API_KEY,
                                                                          Constants.DEFAULT_SORT,
          new NetworkCallback<DiscoverMovieResponse>() {
              @Override
              public void onSuccess(final DiscoverMovieResponse response) {
-                 Log.d(TAG, "Result " + response.page);
+                 getProgressBar().setVisibility(View.GONE);
+
+                 final List<DiscoverMovieResponse.Result> results = response.results;
+                 final MainAdapter adapter = new MainAdapter(results);
+                 getRecyclerView().setAdapter(adapter);
+                 adapter.notifyDataSetChanged();
              }
 
              @Override
@@ -65,5 +90,13 @@ public class MainActivity extends AppCompatActivity {
          });
 
         disposables.add(disposable);
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 }
