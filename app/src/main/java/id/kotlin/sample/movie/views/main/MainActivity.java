@@ -1,5 +1,6 @@
 package id.kotlin.sample.movie.views.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -16,11 +17,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import id.kotlin.sample.movie.R;
+import id.kotlin.sample.movie.data.local.Movie;
 import id.kotlin.sample.movie.data.remote.response.DiscoverMovieResponse;
 import id.kotlin.sample.movie.deps.provider.ActivityProvider;
 import id.kotlin.sample.movie.service.DiscoverMovieService;
 import id.kotlin.sample.movie.service.NetworkCallback;
 import id.kotlin.sample.movie.utils.Constants;
+import id.kotlin.sample.movie.views.detail.DetailActivity;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -73,7 +76,17 @@ public class MainActivity extends AppCompatActivity {
                  getProgressBar().setVisibility(View.GONE);
 
                  final List<DiscoverMovieResponse.Result> results = response.results;
-                 final MainAdapter adapter = new MainAdapter(results);
+                 final MainAdapter adapter =
+                         new MainAdapter(results, new MainAdapter.MovieListener() {
+                             @Override
+                             public void onClick(final Movie movie) {
+                                 final Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                                 final Bundle bundle = new Bundle();
+                                 bundle.putParcelable("DETAIL", movie);
+                                 intent.putExtras(bundle);
+                                 startActivity(intent);
+                             }
+                         });
                  getRecyclerView().setAdapter(adapter);
                  adapter.notifyDataSetChanged();
              }
