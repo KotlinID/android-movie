@@ -5,16 +5,13 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
-import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.module.AppGlideModule;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-@GlideModule
-public final class Commons extends AppGlideModule {
+public final class Commons {
 
     public String getDate(final String date) {
         final DateTimeFormatter format = DateTimeFormat.forPattern(Constants.DEFAULT_DATE);
