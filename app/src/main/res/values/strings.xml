@@ -5,5 +5,5 @@
     <string name="movie_title">Title</string>
     <string name="movie_desc">Description</string>
     <string name="movie_date">Date</string>
-    <string name="movie_vote">Vote</string>
+    <string name="movie_rating">Rating</string>
 </resources>

@@ -6,16 +6,28 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import javax.inject.Inject;
 
 import id.kotlin.sample.movie.R;
 import id.kotlin.sample.movie.data.local.Movie;
 import id.kotlin.sample.movie.deps.provider.ActivityProvider;
+import id.kotlin.sample.movie.utils.Commons;
+import id.kotlin.sample.movie.utils.Constants;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private static final String TAG = DetailActivity.class.getSimpleName();
+    @Inject
+    protected Commons commons;
+
+    private ImageView ivDetail;
+    private TextView tvDetailTitle;
+    private TextView tvDetailDesc;
+    private TextView tvDetailDate;
+    private TextView tvDetailRating;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -29,9 +41,12 @@ public class DetailActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.bg_arrow_back));
         setSupportActionBar(toolbar);
 
-        final Movie movie = getIntent().getParcelableExtra("DETAIL");
-        final String title = movie.title;
-        Log.d(TAG, "TITLE " + title);
+        ivDetail = (ImageView) findViewById(R.id.iv_detail);
+        tvDetailTitle = (TextView) findViewById(R.id.tv_detail_title_value);
+        tvDetailDesc = (TextView) findViewById(R.id.tv_detail_desc_value);
+        tvDetailDate = (TextView) findViewById(R.id.tv_detail_date_value);
+        tvDetailRating = (TextView) findViewById(R.id.tv_detail_rating_value);
+        setMovieDetail();
     }
 
     @Override
@@ -44,5 +59,21 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setMovieDetail() {
+        final Movie movie = getIntent().getParcelableExtra("DETAIL");
+        final String title = movie.title;
+        final String desc = movie.desc;
+        final String date = commons.getDate(movie.date);
+        final String image = Constants.BASE_MOVIE_URL.concat(movie.image);
+        final double vote = movie.vote;
+
+        tvDetailTitle.setText(title);
+        tvDetailDesc.setText(desc);
+        tvDetailDate.setText(date);
+        tvDetailRating.setText(String.valueOf(vote));
+
+        commons.loadImage(this, image, ivDetail);
     }
 }
