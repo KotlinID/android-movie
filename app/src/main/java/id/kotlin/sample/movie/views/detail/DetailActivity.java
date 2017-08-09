@@ -10,18 +10,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import javax.inject.Inject;
-
 import id.kotlin.sample.movie.R;
 import id.kotlin.sample.movie.data.local.Movie;
 import id.kotlin.sample.movie.deps.provider.ActivityProvider;
-import id.kotlin.sample.movie.utils.Commons;
-import id.kotlin.sample.movie.utils.Constants;
+import id.kotlin.sample.movie.ext.Commons;
 
 public class DetailActivity extends AppCompatActivity {
-
-    @Inject
-    protected Commons commons;
 
     private ImageView ivDetail;
     private TextView tvDetailTitle;
@@ -65,8 +59,8 @@ public class DetailActivity extends AppCompatActivity {
         final Movie movie = getIntent().getParcelableExtra("DETAIL");
         final String title = movie.title;
         final String desc = movie.desc;
-        final String date = commons.getDate(movie.date);
-        final String image = Constants.BASE_MOVIE_URL.concat(movie.image);
+        final String date = Commons.getDate(movie.date);
+        final String image = Commons.BASE_MOVIE_URL.concat(movie.image);
         final double vote = movie.vote;
 
         tvDetailTitle.setText(title);
@@ -74,6 +68,6 @@ public class DetailActivity extends AppCompatActivity {
         tvDetailDate.setText(date);
         tvDetailRating.setText(String.valueOf(vote));
 
-        commons.loadImage(this, image, ivDetail);
+        Commons.loadImage(this, image, ivDetail);
     }
 }

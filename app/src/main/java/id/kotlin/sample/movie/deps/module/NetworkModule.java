@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import id.kotlin.sample.movie.data.remote.Api;
-import id.kotlin.sample.movie.utils.Constants;
+import id.kotlin.sample.movie.ext.Commons;
 import okhttp3.Cache;
 import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
@@ -45,7 +45,7 @@ public class NetworkModule {
                              final ConnectionPool connectionPool) {
         final Retrofit retrofit = new Retrofit.Builder()
                                               .client(getOkHttpClient(cache, connectionPool))
-                                              .baseUrl(Constants.BASE_URL)
+                                              .baseUrl(Commons.BASE_URL)
                                               .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                                               .addConverterFactory(JacksonConverterFactory.create(getObjectMapper()))
                                               .build();

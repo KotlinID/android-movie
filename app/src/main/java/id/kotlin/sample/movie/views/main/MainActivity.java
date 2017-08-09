@@ -20,9 +20,9 @@ import id.kotlin.sample.movie.R;
 import id.kotlin.sample.movie.data.local.Movie;
 import id.kotlin.sample.movie.data.remote.response.DiscoverMovieResponse;
 import id.kotlin.sample.movie.deps.provider.ActivityProvider;
+import id.kotlin.sample.movie.ext.Commons;
 import id.kotlin.sample.movie.service.DiscoverMovieService;
 import id.kotlin.sample.movie.service.NetworkCallback;
-import id.kotlin.sample.movie.utils.Constants;
 import id.kotlin.sample.movie.views.detail.DetailActivity;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -68,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
     private void discoverMovie() {
         progressBar.setVisibility(View.VISIBLE);
 
-        final Disposable disposable = discoverMovieService.discoverMovie(Constants.API_KEY,
-                                                                         Constants.DEFAULT_SORT,
+        final Disposable disposable = discoverMovieService.discoverMovie(Commons.API_KEY,
+                                                                         Commons.DEFAULT_SORT,
          new NetworkCallback<DiscoverMovieResponse>() {
              @Override
              public void onSuccess(final DiscoverMovieResponse response) {
